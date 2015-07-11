@@ -1,0 +1,127 @@
+Collatzer
+Collatz Conjecture Object Documentation
+
+Author: Greg Stewart
+Copyright 2014
+
+Notes:
+	-Total size of one object is 24 bytes.
+
+Data:
+	1) Starting number (Unsigned long long integer)
+		-The 'n', starting point for conjecture
+	2) Highest number encountered(unsigned long long integer)
+		-The highest number that the conjecture encounters during calculation
+	3) Total number of steps in the series (unsigned long long integer)
+		-The number of times the algorithm goes through to reach one
+
+FUNCTIONS:
+
+Private:
+(internal working functions)
+	1) void doCollatz(unsigned long long integer)
+		-The recursive function to do the math.
+		-The value passed through is the working number,
+			where we currently are in the conjecture
+		-Takes the input, and if it is even, divides by two.
+		-If odd, multiplies by three and adds one
+		-Repeats this until num is 1
+		-updates highNum when necessary, and adds to the
+			numInSet value every go-around
+		-Called by the newConjecture function
+			
+	2) void newConjecture()
+		-The set up for and calling of doCollatz
+		-Sets the highNum and numInSet values to defaults and
+			calls the doCollatz function
+		-Used by the setNewStart function
+		
+	3) string formatWithCommas(unsigned long long int)
+		-used to make large numbers more readable for printing
+		-uses a string stream to set this up
+
+Public:
+(constructors, main difference is in what kind of values they can take in)
+	1) CollatzConjecture()
+		-initializer
+		-initializes everything to zero
+	2) CollatzConjecture(unsigned long long int)
+		-takes in a unsigned long long integer and makes it the starting number
+		-then does the calculations for the other two variables by calling
+			setNewStart()
+	3) CollatzConjecture(int)
+		-takes in an integer and makes it the starting number
+		-then does the calculations for the other two variables by calling
+			setNewStart()
+	4) CollatzConjecture(CollatzConjecture&)
+		-takes in the pointer for a CollatzConjecture object and takes its 
+			starting number
+		-then does the calculations for the other two variables by calling
+			setNewStart()
+(setters)
+	1) void setNewStart(unsigned long long int)
+		-takes in an unsigned long long int and checks to make sure it is not 
+			zero, so the algorithm does not infinitely loop
+		-if it is zero, sets the other two instance variables to zero as well
+	2) void setNewStart(int)
+		-takes an int and gives that to the other setNewStart
+		-throws an exception if negative
+	3) void setStart(unsigned long long int)
+		-takes in an unsigned long long int and checks to make sure it is not
+			zero
+		-simply sets the value, does not call the algorithm
+	4) void setStart(int)
+		-takes an int and gives that to the other setStart
+		-throws an exception if negative
+	5) void setHigh(unsigned long long int)
+		-takes in an unsigned long long int and sets highNum to it
+	6) void setHigh(int)
+		-takes an int and gives that to the other setHigh
+		-throws an exception if negative
+	7) void setNumInSet(unsigned long long int)
+		-takes in an unsigned long long int and sets numInSet to it
+	8) void setNewStart(int)
+		-takes an int and gives that to the other setNewStart
+		-throws an exception if negative
+(getters)
+	1) unsigned long long int getStart()
+		- simply returns the starting number
+	2) unsigned long long int getHigh()
+		- returns the highest number found in its series
+	3)unsigned long long int getNumInSet()
+		-returns the number of steps in its set
+	4) void print()
+		-prints out all information about the conjecture in a default 
+			format
+		-simply calls the print(char,char) function with certain options
+	5) void print(char,char)
+		-can print out to console a number of ways
+		Available options:
+		op1:
+			'l':for lists
+				op2 choices:
+					-'h':the heading for the conjecture list; same for all 
+						conjectures
+					-'i':the item on the list, the individual conjecture's info
+			'b':for basic output
+				op2 choices:
+					-'t': for a tabbed over print
+					-nothing for default print
+	6) void toString()
+		-returns a string with all information about the conjecture in a 
+			default format
+		-simply calls the toString(char,char) function with certain options
+	7) void toString(char,char)
+		-can return a string in a number of formats
+		Available options:
+		op1:
+			'l':for lists
+				op2 choices:
+					-'h':the heading for the conjecture list; same for all 
+						conjectures
+					-'i':the item on the list, the individual conjecture's info
+			'b':for basic output
+				op2 choices:
+					-'t': for a tabbed over print
+					-nothing for default print
+	
