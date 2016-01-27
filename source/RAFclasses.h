@@ -2,10 +2,10 @@
 	classes to manage and interact with the 'conjectures.dat' file
 
 	also includes other worker classes
-	
+
 	Author: Greg Stewart
 	Date started: 5/13/14
-	
+
 	V1.1
 
 */
@@ -53,7 +53,7 @@ char getCharFromUser(char def){
 	cin.clear(); //clear stream
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');//ignore leftover data
 	//cout << "Input: " << choice;//debugging
-	
+
 	return input;
 }//getCharFromUser(char def)
 //function to call other one with a space as def
@@ -137,7 +137,7 @@ string figureSpace(unsigned long long int number,int sizeOfObj){
 	unsigned long long int kilobytes = 0;
 	unsigned long long int bytes = 0;
 	stringstream sstm;//output string
-	
+
 	//calculate how many of each and take that number away from result
 	if((result >= 1000000000000)){
 		terabytes = result / 1000000000000;
@@ -157,7 +157,7 @@ string figureSpace(unsigned long long int number,int sizeOfObj){
 	}
 	//put what is left into bytes
 	bytes = result;
-	
+
 	/*
 	//debugging
 	cout<<"\tNumbers:"<<endl<<
@@ -200,22 +200,22 @@ string figureSpace(unsigned long long int number,int sizeOfObj){
 */
 string figureTime(double elapsed_time){
 	stringstream sstm;
-	
+
 	//take out the hours
 	int elapsed_hrs = elapsed_time/3600;
 	if(elapsed_hrs > 0){
 		elapsed_time -= elapsed_hrs * 3600;
 	}
-	
+
 	//take out the minutes
 	int elapsed_min = elapsed_time/60;
 	if(elapsed_min > 0){
 		elapsed_time -= elapsed_min * 60;
 	}
-	
+
 	//what is left over put into seconds
 	int elapsed_sec = elapsed_time;
-	
+
 	//output hours, minutes, and seconds where applicable
 	if(elapsed_hrs > 0){
 		sstm << FormatWithCommas(elapsed_hrs)<<"h ";
@@ -224,46 +224,46 @@ string figureTime(double elapsed_time){
 	}else{
 		sstm << elapsed_time <<"s";
 	}
-	
+
 	return sstm.str();
 }//figureTime
 /*
-	returns the conjecture with the highest individual number in its set, 
+	returns the conjecture with the highest individual number in its set,
 		in a range of conjectures
 */
 int getHighNumOfConj(fstream &readFromFile,int x,int y){
 	//instance conjectures
 	CollatzConjecture temp;//conjecture gotten from file
 	CollatzConjecture test;//conjecture to test against
-	
+
 	//to prevent -1 from happening when navigating the file
 	if(x == 1){
 		x = 2;
 	}
-	
+
 	//calculate number to generate
 	int numToGen = (y - x) + 2;
-	
+
 	//navigate to beginning of where we are starting
 	readFromFile.seekg((x - 2) * sizeof(CollatzConjecture));
-	
+
 	//read the first one off into temp
 	readFromFile.read(reinterpret_cast<char *>(&temp),sizeof(CollatzConjecture));
-	
+
 	//make test = temp
 	test = CollatzConjecture(temp);
-	
+
 	//counting number
 	int i = 1;
 	//actual loop to go through file
 	do{
 		//cout<<i<<endl;//debugging
-		
+
 		//read single record into test
 		readFromFile.read(reinterpret_cast<char *>(&test),sizeof(CollatzConjecture));
 		//test.print();//debugging
 		//cout<<endl;//debugging
-		
+
 		//test to see if the new conjecture's highest number is larger
 		if(test.getHigh() > temp.getHigh()){
 			temp = CollatzConjecture(test);
@@ -282,39 +282,39 @@ int getHighNumOfConj(fstream &readFromFile,int x,int y){
 */
 int getHighNumInSet(fstream &readFromFile,int x,int y){
 	//cout<<"getHighNumInSet() called."<<endl;//debugging
-	
+
 	//instance conjectures
 	CollatzConjecture temp;
 	CollatzConjecture test;
-	
+
 	//to prevent -1 from happening when navigating the file
 	if(x == 1){
 		x = 2;
 	}
-	
+
 	//calculate number to generate
 	int numToGen = (y - x) + 2;
-	
+
 	//navigate to beginning of where we are starting
 	readFromFile.seekg((x - 2) * sizeof(CollatzConjecture));
-	
+
 	//read the first one off into temp
 	readFromFile.read(reinterpret_cast<char *>(&temp),sizeof(CollatzConjecture));
-	
+
 	//make test = temp
 	test = CollatzConjecture(temp);
-	
+
 	//counter
 	int i = 1;
 	while(!readFromFile.eof() & i < numToGen){
 		//cout<<i<<endl;//debugging
-		
+
 		//read single record into test
 		readFromFile.read(reinterpret_cast<char *>(&test),sizeof(CollatzConjecture));
-		
+
 		//test.print();//debugging
 		//cout<<endl;//debugging
-		
+
 		//test to see if the new conjecture's set is larger
 		if(test.getNumInSet() > temp.getNumInSet()){
 			temp = CollatzConjecture(test);
@@ -331,7 +331,7 @@ int getHighNumInSet(fstream &readFromFile,int x,int y){
 	Function to search the data file to find how many conjectures there are
 		with x steps
 	takes in the number of steps and the filestream
-	
+
 	returns the number of conjectures
 */
 unsigned long long int findNumWithHighNum(unsigned long long int highNum,fstream &readFromFile,unsigned long long int lowBounds,unsigned long long int highBounds){
@@ -352,7 +352,7 @@ unsigned long long int findNumWithHighNum(unsigned long long int highNum,fstream
 		place++;
 		readFromFile.read(reinterpret_cast<char *>(&temp),sizeof(CollatzConjecture));
 	}while(place <= highBounds);
-	
+
 	readFromFile.clear();//clear readFromFile to ensure nothing gets mixed up in the file stream
 	return count;
 }//findNumWithHighNum
@@ -361,7 +361,7 @@ unsigned long long int findNumWithHighNum(unsigned long long int highNum,fstream
 	Function to search the data file to find how many conjectures there are
 		with x steps
 	takes in the number of steps and the filestream
-	
+
 	returns the number of conjectures
 */
 unsigned long long int findNumWithXStep(unsigned long long int stepNum,fstream &readFromFile,unsigned long long int lowBounds,unsigned long long int highBounds){
@@ -382,7 +382,7 @@ unsigned long long int findNumWithXStep(unsigned long long int stepNum,fstream &
 		place++;
 		readFromFile.read(reinterpret_cast<char *>(&temp),sizeof(CollatzConjecture));
 	}while(place <= highBounds);
-	
+
 	readFromFile.clear();//clear readFromFile to ensure nothing gets mixed up in the file stream
 	return count;
 }//findNumWithXStep
@@ -390,84 +390,84 @@ unsigned long long int findNumWithXStep(unsigned long long int stepNum,fstream &
 	to create a text file listing all the conjectures
 */
 bool createTextFile(fstream &readFromFile,int numGenerated){
-	
+
 	//create text file to output to
 	ostringstream convert;
 	//create custom filename based on what is being generated
-	convert << numGenerated; 
+	convert << numGenerated;
 	string fileName ="outputs/conjectures_to_"+ convert.str()+".txt";
 	//make the file
 	ofstream outPrintFile(fileName.c_str(), ios::out);
-	
+
 	//if the file couldnt be made/opened
 	if ( !outPrintFile ){
 		return false;
 	}else{
 		cout<<"File being saved as: \""<<fileName<<"\"."<<endl;
 	}
-	
+
 	//set up headers, for beginning of text file list
 	cout<<"Finding highest number of all the sets..."<<endl;
 	CollatzConjecture highestNumberInSet;
 	highestNumberInSet = CollatzConjecture(getHighNumOfConj(readFromFile,1,numGenerated));
 	cout<<" Done."<<endl;
-	
+
 	cout<<"Finging number of conjectures with this number..."<<endl;
 	unsigned long long int numWithHigh = findNumWithHighNum(highestNumberInSet.getHigh(),readFromFile,1,numGenerated);
 	cout<<" Done."<<endl;
-	
+
 	cout<<"Finding the conjecture with the biggest set..."<<endl;
 	CollatzConjecture biggestSet;
 	biggestSet = CollatzConjecture(getHighNumInSet(readFromFile,1,numGenerated));
 	cout<<" Done."<<endl;
-	
+
 	cout<<"Finding the number of conjectures with this sized set..."<<endl;
 	unsigned long long int numWithHighStep = findNumWithXStep(biggestSet.getNumInSet(),readFromFile,1,numGenerated);
 	cout<<" Done."<<endl;
-	
+
 	//output headers to file
 	outPrintFile<<"Collatz Conjectures 1 - "<<FormatWithCommas(numGenerated)<<endl<<
 				  "Generated with Collatzer by Greg Stewart"<<endl<<endl;
-				  
+
 	outPrintFile<<"Conjecture with largest number encountered in its set:"<<endl
 				<<left<<setw(29)<<"Start:"<<setw(18)<<FormatWithCommas(highestNumberInSet.getStart())<<endl
 				<<setw(29)<<"Number In set:"<<setw(18)<<FormatWithCommas(highestNumberInSet.getNumInSet())<<endl
-				<<setw(29)<<"Highest Number Encountered:"<<FormatWithCommas(highestNumberInSet.getHigh())<<endl<<endl; 
+				<<setw(29)<<"Highest Number Encountered:"<<FormatWithCommas(highestNumberInSet.getHigh())<<endl<<endl;
 	outPrintFile<<"Number of times the largest number encountered appears: "<<FormatWithCommas(numWithHigh)<<endl<<endl;
-				
+
 	outPrintFile<<"Conjecture with the largest set:"<<endl
 				<<left<<setw(29)<<"Start:"<<setw(18)<<FormatWithCommas(biggestSet.getStart())<<endl
 				<<setw(29)<<"Number In set:"<<setw(18)<<FormatWithCommas(biggestSet.getNumInSet())<<endl
 				<<setw(29)<<"Highest Number Encountered:"<<FormatWithCommas(biggestSet.getHigh())<<endl<<endl;
 	outPrintFile<<"Number of sets that have this number in them: "<<FormatWithCommas(numWithHighStep)<<endl<<endl;
-	
+
 	outPrintFile<<left<<setw(18)<<"Starting Num"<<setw(18)<<"Highest # in Set"<<setw(18)<<"# Of Steps"<<endl;
-	
+
 	cout<<"Now writing conjectures out to file..."<<endl;
 	//set file-position pointer to beginning of readFromFile
 	readFromFile.seekg(0);
-	
+
 	//read first record from data file
 	CollatzConjecture conj;
 	readFromFile.read( reinterpret_cast<char *>(&conj),sizeof(CollatzConjecture));
 	//conj.toString(0);//debugging
-	
+
 	//print out frame for loading bar
 	cout<<"Progress:"<<endl<<
 		"|0%          25%        50%        75%       100%|"<<endl;
-	
+
 	//do math for loading bar
 	int updateFreq = numGenerated/50;
 	int count = 0;
-	
+
 	//copy all records from record file into text file
 	while( !readFromFile.eof()){
 		//write single record to text file
 		if(conj.getStart() != 0){//skip possible bad one (can't start at zero)
-			
+
 			//output to file
 			outPrintFile<<left<<setw(18)<<FormatWithCommas(conj.getStart())<<setw(18)<<FormatWithCommas(conj.getHigh())
-						<<setw(18)<<FormatWithCommas(conj.getNumInSet())<<endl;			
+						<<setw(18)<<FormatWithCommas(conj.getNumInSet())<<endl;
 			//move count up
 			count++;
 			//see if we need to add to the progress bar
@@ -477,10 +477,10 @@ bool createTextFile(fstream &readFromFile,int numGenerated){
 			}
 			//conj.toString(1);//debugging
 		}
-		
+
 		//read next record from file
 		readFromFile.read(reinterpret_cast<char *>(&conj),sizeof(CollatzConjecture));
-		
+
 	}//while not end of file
 	cout<<" Done."<<endl;
 	readFromFile.clear();//clear readFromFile to ensure nothing gets mixed up in the file stream
@@ -491,7 +491,7 @@ bool createTextFile(fstream &readFromFile,int numGenerated){
 	To create a textfile containing only the conjectures within a range
 */
 bool createTextFileRange(fstream &readFromFile,int x,int y){
-	
+
 	//make sure correct inputs
 	if(x == 0){
 		x = 1;
@@ -503,7 +503,7 @@ bool createTextFileRange(fstream &readFromFile,int x,int y){
 	//setup text file
 	ostringstream convert;
 	//make custom string for file name
-	convert << x; 
+	convert << x;
 	string fileName ="outputs/conjectures_"+ convert.str();
 	convert.str("");
 	convert << y;
@@ -515,65 +515,65 @@ bool createTextFileRange(fstream &readFromFile,int x,int y){
 	if ( !outPrintFile ){
 		return false;
 	}
-	
+
 	//set up headers
 	cout<<"Finding highest number of all the sets..."<<endl;
 	CollatzConjecture highestNumberInSet;
 	highestNumberInSet = CollatzConjecture(getHighNumOfConj(readFromFile,x,y));
 	cout<<" Done."<<endl;
-	
+
 	cout<<"Finding number of conjectures with this number..."<<endl;//debugging
 	unsigned long long int numWithHigh = findNumWithHighNum(highestNumberInSet.getHigh(),readFromFile,x,y);
 	cout<<" Done."<<endl;
-	
+
 	cout<<"Finding the conjecture with the biggest set..."<<endl;
 	CollatzConjecture biggestSet;
 	biggestSet = CollatzConjecture(getHighNumInSet(readFromFile,x,y));
 	cout<<" Done."<<endl;
-	
+
 	cout<<"Finding the number of conjectures with this sized set..."<<endl;
 	unsigned long long int numWithHighStep = findNumWithXStep(biggestSet.getNumInSet(),readFromFile,x,y);
 	cout<<" Done."<<endl;
-	
+
 	//write headers to file
 	outPrintFile<<"Collatz Conjectures "<<FormatWithCommas(x)<<" - "<<FormatWithCommas(y)<<endl<<
 				  "Generated with Collatzer by Greg Stewart"<<endl<<endl;
-				  
+
 	outPrintFile<<"Conjecture with largest number encountered in its set:"<<endl
 				<<left<<setw(29)<<"Start:"<<setw(18)<<FormatWithCommas(highestNumberInSet.getStart())<<endl
 				<<setw(29)<<"Number In set:"<<setw(18)<<FormatWithCommas(highestNumberInSet.getNumInSet())<<endl
-				<<setw(29)<<"Highest Number Encountered:"<<FormatWithCommas(highestNumberInSet.getHigh())<<endl<<endl; 
+				<<setw(29)<<"Highest Number Encountered:"<<FormatWithCommas(highestNumberInSet.getHigh())<<endl<<endl;
 	outPrintFile<<"Number of times the largest number encountered appears: "<<FormatWithCommas(numWithHigh)<<endl<<endl;
-				
+
 	outPrintFile<<"Conjecture with the largest set:"<<endl
 				<<left<<setw(29)<<"Start:"<<setw(18)<<FormatWithCommas(biggestSet.getStart())<<endl
 				<<setw(29)<<"Number In set:"<<setw(18)<<FormatWithCommas(biggestSet.getNumInSet())<<endl
 				<<setw(29)<<"Highest Number Encountered:"<<FormatWithCommas(biggestSet.getHigh())<<endl<<endl;
 	outPrintFile<<"Number of sets that have this number in them: "<<FormatWithCommas(numWithHighStep)<<endl<<endl;
-	
+
 	outPrintFile<<left<<setw(18)<<"Starting Num"<<setw(18)<<"Highest # in Set"<<setw(18)<<"# Of Steps"<<endl;
-	
+
 	cout<<"Now writing conjectures out to file..."<<endl;
 	//set file-position pointer to where it needs to be
 	readFromFile.seekg((x - 1) * sizeof(CollatzConjecture));
-	
+
 	//read first record from data file
 	CollatzConjecture conj;
 	readFromFile.read( reinterpret_cast<char *>(&conj),sizeof(CollatzConjecture));
 	//conj.toString(0);//debugging
-	
+
 	//copy all records from record file into text file
 	while(x <= y & !readFromFile.eof()){
 		//write single record to text file
 		if(conj.getStart() != 0){//skip possible bad one (can't start at zero)
-			
+
 			//output to file
 			outPrintFile<<left<<setw(18)<<FormatWithCommas(conj.getStart())<<setw(18)<<FormatWithCommas(conj.getHigh())
 						<<setw(18)<<FormatWithCommas(conj.getNumInSet())<<endl;
-			
+
 			//conj.toString(1);//debugging
 		}
-		
+
 		//read next record from file
 		readFromFile.read(reinterpret_cast<char *>(&conj),sizeof(CollatzConjecture));
 		x++;
@@ -583,42 +583,107 @@ bool createTextFileRange(fstream &readFromFile,int x,int y){
 	return true;
 }//createTextFile
 
+bool createCSVFile(fstream &readFromFile,int numGenerated){
+	//create text file to output to
+	ostringstream convert;
+	//create custom filename based on what is being generated
+	convert << numGenerated;
+	string fileName ="outputs/conjectures_to_"+ convert.str()+".csv";
+	//make the file
+	ofstream outPrintFile(fileName.c_str(), ios::out);
+
+	//if the file couldnt be made/opened
+	if ( !outPrintFile ){
+		return false;
+	}else{
+		cout<<"File being saved as: \""<<fileName<<"\"."<<endl;
+	}
+
+	//set up headers, for beginning of text file list
+	cout<<"Writing out headers..."<<endl;
+	outPrintFile << "Starting Number, Highest Number in that Set, Number of Steps" << endl;
+
+	cout<<"Now writing conjectures out to file..."<<endl;
+	//set file-position pointer to beginning of readFromFile
+	readFromFile.seekg(0);
+
+	//read first record from data file
+	CollatzConjecture conj;
+	readFromFile.read( reinterpret_cast<char *>(&conj),sizeof(CollatzConjecture));
+	//conj.toString(0);//debugging
+
+	//print out frame for loading bar
+	cout<<"Progress:"<<endl<<
+		"|0%          25%        50%        75%       100%|"<<endl;
+
+	//do math for loading bar
+	int updateFreq = numGenerated/50;
+	int count = 0;
+
+	//copy all records from record file into text file
+	while( !readFromFile.eof()){
+		//write single record to text file
+		if(conj.getStart() != 0){//skip possible bad one (can't start at zero)
+
+			//output to file
+			outPrintFile << conj.getStart() << "," <<
+						conj.getHigh() << "," <<
+						conj.getNumInSet() <<endl;
+			//move count up
+			count++;
+			//see if we need to add to the progress bar
+			if(count >= updateFreq){
+				cout<<"#"<<flush;
+				count = 0;
+			}
+			//conj.toString(1);//debugging
+		}
+
+		//read next record from file
+		readFromFile.read(reinterpret_cast<char *>(&conj),sizeof(CollatzConjecture));
+
+	}//while not end of file
+	cout<<" Done."<<endl;
+	readFromFile.clear();//clear readFromFile to ensure nothing gets mixed up in the file stream
+	return true;
+}//createCSVFile
+
 /*
 	to create a new record
 */
 bool newRecord(fstream &insertInFile,CollatzConjecture &conj){
-	
-	
+
+
 	//obtain new number of conj to create
 	unsigned long long int startNum = conj.getStart();
-	
+
 	//move file-position pointer to correct record in file
 	insertInFile.seekg((startNum - 1) * sizeof(CollatzConjecture));
-	
+
 	//read record from file
 	CollatzConjecture conj2;
 	insertInFile.read(reinterpret_cast<char *>(&conj2),sizeof(CollatzConjecture));
-	
+
 	//clear to not mix things up if empty file
 	insertInFile.clear();
-	
+
 	//create record, if record does not previously exist
 	if(conj2.getStart() == 0){
-	
+
 		//cout<<"Writing to file... ";//debugging
-		
+
 		//move file-position pointer to correct record in file
 		insertInFile.seekp((startNum - 1) * sizeof(CollatzConjecture));
-		
+
 		//insert record in file
 		insertInFile.write(reinterpret_cast<const char *>(&conj),sizeof(CollatzConjecture));
-		
-		
+
+
 		//testing for failiures
 		if(!insertInFile | insertInFile.fail()){
 			//cout<<"ERROR: Writing conjecture starting at "<<conj.getStart()<<" failed."<<endl;
 			return false;
-		}else{ 
+		}else{
 			//cout<<"Writing conjecture starting at "<<conj.getStart()<<" succeded."<<endl;
 			return true;
 		}
@@ -626,10 +691,10 @@ bool newRecord(fstream &insertInFile,CollatzConjecture &conj){
 		//cout<<"Conjecture starting at "<<conj.getStart()<<" already present."<<endl;//debugging
 		//conj.toString();//debugging
 		//cout<<endl<<endl;//debugging
-		
+
 		return false;
 	}
-	
+
 }//newRecord
 
 /*
@@ -646,7 +711,7 @@ bool createFromTo(unsigned long long int lowNum,unsigned long long int highNum,f
 		cout<<"the lower bounds is greater than the upper"<<endl;
 		return false;
 	}
-	
+
 	time_t start,end;//instanciate start and end time objects
 
 	//output range and number to be generated
@@ -657,27 +722,27 @@ bool createFromTo(unsigned long long int lowNum,unsigned long long int highNum,f
 	//print out frame for loading bar
 	cout<<"Progress:"<<endl<<
 		"|0%          25%        50%        75%       100%|"<<endl;
-	
+
 	//setup math for loading bar
 	int updateFreq = numGenerating/50;
 	int count = 0;
-	
+
 	//instance variables for loading bar
 	bool result = true;
 	CollatzConjecture temp;
-	
+
 	//take starting time
 	time (&start);
-	
+
 	//do the actual generation loop
 	while(lowNum <= highNum & result){//generation loop
-			
+
 		//make new conjecture
 		temp = CollatzConjecture(lowNum);
-	
+
 		//insert into file
 		result = newRecord(theFileStream,temp);
-		
+
 		//move i up one
 		lowNum++;
 		//move count up one
@@ -688,27 +753,27 @@ bool createFromTo(unsigned long long int lowNum,unsigned long long int highNum,f
 			count = 0;
 		}
 	}//generation loop
-	
+
 	time (&end);//take end time
 	cout<<endl;//spacer
-	
+
 	//calculate time spent (in seconds)
 	double elapsed_time = difftime (end,start);
-	
+
 	//separate into hours, minutes, and seconds
 	string timeString = figureTime(elapsed_time);
-	
+
 	//output
 	cout<<"Time elapsed: "<<timeString<<endl;
-	
+
 	if(result){//if it worked
 		return true;
 	}else{//if it failed
 		return false;
 	}
-	
-	
-	
+
+
+
 }//if not already generated to that number
 
 /*
@@ -717,24 +782,24 @@ bool createFromTo(unsigned long long int lowNum,unsigned long long int highNum,f
 int getNumConj(fstream &readFromFile){
 	//output start of function
 	cout<<"Calculating number of conjectures on file";
-	
+
 	//counting number
 	int i = 0;
 	//temporart holder of data from file
 	//cout<<"\tCreating temp CollatzConjecture"<<endl;//debug
 	CollatzConjecture temp;
-	
+
 	//cout<<"\t Done"<<endl;//debugging
-	
+
 	//set readFromFile to beginning of file
 	readFromFile.seekg(0);
-	
+
 	//read the first conjecture
 	readFromFile.read(reinterpret_cast<char *>(&temp),sizeof(CollatzConjecture));
-	
+
 	//output start of calculation
 	cout<<"..."<<endl;
-	
+
 	//begin counting loop
 	while(!readFromFile.eof()){
 		//move i up
@@ -758,7 +823,7 @@ int checkFile(fstream &readFromFile){
 	int i = 1;//counting number in file
 	CollatzConjecture temp;//tester of data from file
 	CollatzConjecture test;//holder of data from file
-	
+
 	//set reader to beginning of file and get the first entry
 	readFromFile.seekg(0);
 	readFromFile.read(reinterpret_cast<char *>(&test),sizeof(CollatzConjecture));
@@ -766,7 +831,7 @@ int checkFile(fstream &readFromFile){
 	do{
 		//create fresh conjecture based on where we are
 		temp = CollatzConjecture(i);
-		
+
 		//test for innacuracy
 		if(temp != test){
 			//add one to numWrong
@@ -781,14 +846,14 @@ int checkFile(fstream &readFromFile){
 		//move up the one we are on
 		readFromFile.read(reinterpret_cast<char *>(&test),sizeof(CollatzConjecture));
 	}while(!readFromFile.eof());
-	
+
 	readFromFile.clear();//clear readFromFile to ensure nothing gets mixed up in the file stream
 	return numWrong;//return number of conjectures found wrong
 }
 
 /*
 	createOp
-	
+
 	Generates the default options file.
 */
 bool createOp(){
@@ -820,7 +885,7 @@ bool createOp(){
 		else{
 			outPrintFile << endl << options[i];
 		}
-		
+
 		if (!outPrintFile){
 			outPrintFile.close();
 			return false;

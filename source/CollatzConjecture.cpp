@@ -1,6 +1,6 @@
-/*
-	Functions for the CollatzConjecture 
-	
+/**
+	Functions for the CollatzConjecture
+
 	Author: Greg Stewart
 	Start:  4/16/14
 */
@@ -15,7 +15,7 @@ using namespace std;
 
 ////////////////////////////
 ////	Public methods	////
-////////////////////////////	
+////////////////////////////
 /*
 	Constructors
 */
@@ -43,11 +43,11 @@ CollatzConjecture::CollatzConjecture(CollatzConjecture& y){
 	Setters
 */
 
-//sets a new start number, re-evaluates series	
+//sets a new start number, re-evaluates series
 void CollatzConjecture::setNewStart(unsigned long long int x){
 	startNum = x;
 	if(x != 0){//if x is not zero, so it does not infinitely loop
-		newConjecture();	
+		newConjecture();
 	}else{
 		highNum = 0;
 		numInSet= 0;
@@ -59,7 +59,7 @@ void CollatzConjecture::setNewStart(int x){
 	}
 	setNewStart((unsigned long long int)x);
 }//setNewStart(int)
-	
+
 /*
 	Getters
 */
@@ -77,6 +77,27 @@ unsigned long long int CollatzConjecture::getHigh(){
 //gets the number of numbers in the series
 unsigned long long int CollatzConjecture::getNumInSet(){
 	return numInSet;
+}
+
+//gets a vector of each step in the set
+vector<unsigned long long int>& CollatzConjecture::getSetNumbers(){
+	vector<unsigned long long int> setNumbers;
+	unsigned long long int num = getStart();
+
+	setNumbers.push_back(num);
+	if(num == 1){
+		return setNumbers;
+	}
+	while(num != 1){//if the number isn't 1 (where we want to go)
+		//decide on what do do based on number
+		if(num%2 != 0){//if it isnt divisible by two
+			num = (num * 3) + 1;
+		}else{//else
+			num = num / 2;
+		}
+		setNumbers.push_back(num);
+	}//if != 1
+	return setNumbers;
 }
 
 /*
@@ -136,10 +157,10 @@ void CollatzConjecture::print(){
 }
 /*
 	the toString() method
-	
-	Similar to the idea of the print() method above, except instead of 
+
+	Similar to the idea of the print() method above, except instead of
 		printing the stuff, it returns it as a string. Uses the sstream
-		method of stream manipulation	
+		method of stream manipulation
 	Options:
 op1:
 'l':for lists
@@ -199,12 +220,12 @@ string CollatzConjecture::toString(){
 /*
 	Other
 */
-	
+
 ////////////////////////////////
 ////	Private Methods     ////
 ////////////////////////////////
 
-//recursive function to do the conjecture		
+//recursive function to do the conjecture
 void CollatzConjecture::doCollatz(unsigned long long int num){
 	if(num != 1){//if the number isn't 1 (where we want to go)
 		//move count up one, test for highest number
